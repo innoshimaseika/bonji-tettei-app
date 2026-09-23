@@ -73,7 +73,7 @@
     }));
     frame.addEventListener('load', () => {
       if (!frame.getAttribute('src')) return;
-      window.setTimeout(() => loadingOverlay.classList.remove('show'), 700);
+      window.setTimeout(() => loadingOverlay.classList.remove('show'), 2000);
       const targetView = pendingView === 'master' ? 'home' : pendingView;
       frame.contentWindow.postMessage({ type: 'bonji-show-view', view: targetView }, '*');
       window.setTimeout(() => frame.contentWindow.postMessage({ type: 'bonji-show-view', view: targetView }, '*'), 2500);
