@@ -62,9 +62,12 @@
       app.classList.add('show');
       app.scrollIntoView({ behavior: 'smooth', block: 'start' });
       if (frame.src !== appUrl) frame.src = appUrl;
-      else frame.contentWindow.postMessage({ type: 'bonji-show-view', view: pendingView }, 'https://script.google.com');
+      else frame.contentWindow.postMessage({ type: 'bonji-show-view', view: pendingView }, '*');
     }));
-    frame.addEventListener('load', () => frame.contentWindow.postMessage({ type: 'bonji-show-view', view: pendingView }, 'https://script.google.com'));
+    frame.addEventListener('load', () => {
+      frame.contentWindow.postMessage({ type: 'bonji-show-view', view: pendingView }, '*');
+      window.setTimeout(() => frame.contentWindow.postMessage({ type: 'bonji-show-view', view: pendingView }, '*'), 2500);
+    });
     document.getElementById('closeApp').addEventListener('click', () => { app.classList.remove('show'); frame.src = ''; window.scrollTo({ top: 0, behavior: 'smooth' }); });
   </script>
 </body>
