@@ -62,7 +62,6 @@
       app.classList.add('show');
       app.scrollIntoView({ behavior: 'smooth', block: 'start' });
       frame.src = appUrl + '?view=' + encodeURIComponent(pendingView);
-      else frame.contentWindow.postMessage({ type: 'bonji-show-view', view: pendingView }, '*');
     }));
     frame.addEventListener('load', () => {
       frame.contentWindow.postMessage({ type: 'bonji-show-view', view: pendingView }, '*');
