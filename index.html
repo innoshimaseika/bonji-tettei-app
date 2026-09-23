@@ -3,14 +3,69 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="refresh" content="0;url=https://script.google.com/macros/s/AKfycbwdYLd3bRJRn5x32hodi88QmWmuK9JIrw3c09aS_2Hd_PCBNNkVjMo5Lm9Xcn5TFU8/exec">
-  <link rel="canonical" href="https://script.google.com/macros/s/AKfycbwdYLd3bRJRn5x32hodi88QmWmuK9JIrw3c09aS_2Hd_PCBNNkVjMo5Lm9Xcn5TFU8/exec">
-  <title>凡事徹底アプリへ移動中…</title>
+  <meta name="theme-color" content="#f4f7fb">
+  <link rel="icon" type="image/png" href="icon.png">
+  <link rel="apple-touch-icon" href="icon.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <title>凡事徹底｜清掃管理</title>
+  <style>
+    :root { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans JP", sans-serif; color: #172033; background: #f4f7fb; }
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    .shell { max-width: 1100px; margin: auto; min-height: 100vh; padding: 14px; }
+    header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+    .brand { font-weight: 800; font-size: 24px; color: #123a72; }
+    .badge { font-size: 12px; color: #54708d; background: #eaf2fb; padding: 8px 12px; border-radius: 999px; }
+    .card { background: #fff; border: 1px solid #e5ebf2; border-radius: 22px; padding: 26px; box-shadow: 0 8px 24px #183b5d0d; }
+    h1 { margin: 28px 0 14px; font-size: 40px; }
+    .hint { color: #63758a; font-size: 16px; margin: 0 0 22px; }
+    .home-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+    .nav-card { text-align: left; cursor: pointer; min-height: 218px; border: 1px solid #cbdced; background: #fff; border-radius: 20px; padding: 28px; transition: .2s; }
+    .nav-card:hover, .nav-card:focus-visible { transform: translateY(-2px); border-color: #5b9bd5; box-shadow: 0 10px 25px #1c4d7d18; outline: none; }
+    .nav-card .icon { font-size: 38px; }
+    .nav-card h2 { margin: 18px 0 8px; font-size: 24px; }
+    .nav-card p { margin: 0; color: #63758a; font-size: 16px; line-height: 1.5; }
+    .embedded-app { display: none; margin-top: 20px; }
+    .embedded-app.show { display: block; }
+    .embedded-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+    .embedded-head h2 { margin: 0; font-size: 20px; color: #123a72; }
+    .close { border: 0; background: #eaf2fb; color: #2866a5; border-radius: 999px; padding: 8px 12px; cursor: pointer; }
+    iframe { display: block; width: 100%; height: 760px; border: 1px solid #d8e3ee; border-radius: 18px; background: #f4f7fb; }
+    @media (max-width: 640px) { .shell { padding: 12px; } .brand { font-size: 19px; } h1 { font-size: 32px; } .home-grid { grid-template-columns: 1fr; } .nav-card { min-height: 170px; padding: 22px; } iframe { height: 820px; } }
+  </style>
 </head>
 <body>
+  <div class="shell">
+    <header><div class="brand">凡事徹底｜清掃管理</div><div class="badge">漏れチェック</div></header>
+    <main class="card">
+      <h1>ホーム</h1>
+      <p class="hint">実施入力と月ごとの確認表を選択してください。</p>
+      <div class="home-grid">
+        <button class="nav-card" type="button" data-view="record"><div class="icon">🧹</div><h2>清掃を実施</h2><p>店舗と場所を選び、写真と担当者名を登録します。</p></button>
+        <button class="nav-card" type="button" data-view="report"><div class="icon">📋</div><h2>清掃実施確認表</h2><p>月別・店舗別に、実施担当者の記録を確認します。</p></button>
+      </div>
+    </main>
+    <section id="embeddedApp" class="embedded-app" aria-live="polite">
+      <div class="embedded-head"><h2 id="embeddedTitle">アプリ</h2><button id="closeApp" class="close" type="button">閉じる</button></div>
+      <iframe id="appFrame" title="凡事徹底アプリ" allow="camera"></iframe>
+    </section>
+  </div>
   <script>
-    window.location.replace('https://script.google.com/macros/s/AKfycbwdYLd3bRJRn5x32hodi88QmWmuK9JIrw3c09aS_2Hd_PCBNNkVjMo5Lm9Xcn5TFU8/exec');
+    const appUrl = 'https://script.google.com/macros/s/AKfycbwdYLd3bRJRn5x32hodi88QmWmuK9JIrw3c09aS_2Hd_PCBNNkVjMo5Lm9Xcn5TFU8/exec';
+    const app = document.getElementById('embeddedApp');
+    const frame = document.getElementById('appFrame');
+    const title = document.getElementById('embeddedTitle');
+    let pendingView = 'home';
+    document.querySelectorAll('[data-view]').forEach(button => button.addEventListener('click', () => {
+      pendingView = button.dataset.view;
+      title.textContent = pendingView === 'record' ? '清掃を実施' : '清掃実施確認表';
+      app.classList.add('show');
+      app.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (frame.src !== appUrl) frame.src = appUrl;
+      else frame.contentWindow.postMessage({ type: 'bonji-show-view', view: pendingView }, 'https://script.google.com');
+    }));
+    frame.addEventListener('load', () => frame.contentWindow.postMessage({ type: 'bonji-show-view', view: pendingView }, 'https://script.google.com'));
+    document.getElementById('closeApp').addEventListener('click', () => { app.classList.remove('show'); frame.src = ''; window.scrollTo({ top: 0, behavior: 'smooth' }); });
   </script>
-  <p>アプリへ移動しています。自動で移動しない場合は<a href="https://script.google.com/macros/s/AKfycbwdYLd3bRJRn5x32hodi88QmWmuK9JIrw3c09aS_2Hd_PCBNNkVjMo5Lm9Xcn5TFU8/exec">こちら</a>を開いてください。</p>
 </body>
 </html>
