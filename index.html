@@ -33,9 +33,9 @@
     .loading-overlay { display: none; position: fixed; inset: 0; z-index: 10000; background: rgba(20, 30, 45, .58); align-items: center; justify-content: center; color: #fff; font-size: 20px; font-weight: 800; }
     .loading-overlay.show { display: flex; }
     iframe { display: block; width: 100%; height: 760px; border: 1px solid #d8e3ee; border-radius: 18px; background: #f4f7fb; }
-    .report-mode iframe { height: 1800px; }
+    .report-mode iframe { height: calc(100vh - 220px); min-height: 480px; }
     .master-quick { margin: -6px 0 18px; } .master-quick summary { display: inline-block; cursor: pointer; color: #47627d; font-size: 13px; font-weight: 700; padding: 3px 6px; } .master-quick iframe { height: 520px; border-radius: 10px; margin-top: 5px; }
-    @media (max-width: 640px) { .shell { padding: 12px; } .brand { font-size: 19px; } h1 { font-size: 32px; } .home-grid { grid-template-columns: 1fr; } .nav-card { min-height: 170px; padding: 22px; } iframe { height: 2200px; } .report-mode iframe { height: calc(100vh - 180px); height: calc(100dvh - 180px); min-height: 520px; } .master-quick iframe { height: 700px; } }
+    @media (max-width: 640px) { .shell { padding: 12px; } .brand { font-size: 19px; } h1 { font-size: 32px; } .home-grid { grid-template-columns: 1fr; } .nav-card { min-height: 170px; padding: 22px; } iframe { height: 2200px; } .report-mode iframe { height: calc(100vh - 240px); height: calc(100dvh - 240px); min-height: 420px; } .master-quick iframe { height: 700px; } }
   </style>
 </head>
 <body>
