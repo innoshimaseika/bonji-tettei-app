@@ -53,11 +53,12 @@
     </section>
   </div>
   <script>
-    const appUrl = 'https://script.google.com/macros/s/AKfycbwdYLd3bRJRn5x32hodi88QmWmuK9JIrw3c09aS_2Hd_PCBNNkVjMo5Lm9Xcn5TFU8/exec?v=50';
+    const appUrl = 'https://script.google.com/macros/s/AKfycbwdYLd3bRJRn5x32hodi88QmWmuK9JIrw3c09aS_2Hd_PCBNNkVjMo5Lm9Xcn5TFU8/exec?v=51';
     const app = document.getElementById('embeddedApp');
     const frame = document.getElementById('appFrame');
     const title = document.getElementById('embeddedTitle');
     let pendingView = 'home';
+    let frameReady = false;
     document.querySelectorAll('[data-view]').forEach(button => button.addEventListener('click', () => {
       pendingView = button.dataset.view;
       title.textContent = pendingView === 'record' ? '清掃を実施' : '清掃実施確認表';
@@ -67,9 +68,13 @@
       frame.src = appUrlForView(pendingView);
     }));
     frame.addEventListener('load', () => {
+      frameReady = false;
       const targetView = pendingView === 'master' ? 'home' : pendingView;
       frame.contentWindow.postMessage({ type: 'bonji-show-view', view: targetView }, '*');
       window.setTimeout(() => frame.contentWindow.postMessage({ type: 'bonji-show-view', view: targetView }, '*'), 2500);
+      window.setTimeout(() => {
+        if (!frameReady && frame.src) frame.src = appUrlForView(pendingView) + '&recovery=' + Date.now();
+      }, 1200);
     });
     document.getElementById('closeApp').addEventListener('click', () => { app.classList.remove('show'); frame.src = ''; window.scrollTo({ top: 0, behavior: 'smooth' }); });
     function appUrlForView(view) {
@@ -93,6 +98,7 @@
       navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' } }, audio: false }).catch(() => navigator.mediaDevices.getUserMedia({ video: true, audio: false })).then(stream => { parentCameraStream = stream; video.srcObject = stream; }).catch(error => { closeParentCamera(); alert('カメラを起動できませんでした。Chromeのサイト設定でカメラを許可してください。(' + (error.name || '権限エラー') + ')'); });
     }
     window.addEventListener('message', event => {
+      if (event.source === frame.contentWindow && event.data && event.data.type === 'bonji-app-ready') frameReady = true;
       if (event.data && event.data.type === 'bonji-default-store' && event.data.storeId) localStorage.setItem('bonji-default-store-id', event.data.storeId);
       if (event.data && event.data.type === 'bonji-open-camera') { cameraRequester = event.source; openParentCamera(); }
     });
