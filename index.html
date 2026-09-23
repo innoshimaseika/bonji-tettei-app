@@ -31,7 +31,8 @@
     .embedded-head h2 { margin: 0; font-size: 20px; color: #123a72; }
     .close { border: 0; background: #eaf2fb; color: #2866a5; border-radius: 999px; padding: 8px 12px; cursor: pointer; }
     iframe { display: block; width: 100%; height: 760px; border: 1px solid #d8e3ee; border-radius: 18px; background: #f4f7fb; }
-    @media (max-width: 640px) { .shell { padding: 12px; } .brand { font-size: 19px; } h1 { font-size: 32px; } .home-grid { grid-template-columns: 1fr; } .nav-card { min-height: 170px; padding: 22px; } iframe { height: 820px; } }
+    .master-card { min-height: auto; padding: 14px 22px; } .master-card h2 { font-size: 16px; margin: 6px 0; }
+    @media (max-width: 640px) { .shell { padding: 12px; } .brand { font-size: 19px; } h1 { font-size: 32px; } .home-grid { grid-template-columns: 1fr; } .nav-card { min-height: 170px; padding: 22px; } .master-card { min-height: auto; padding: 14px 22px; } iframe { height: 820px; } }
   </style>
 </head>
 <body>
@@ -43,6 +44,7 @@
       <div class="home-grid">
         <button class="nav-card" type="button" data-view="record"><div class="icon">🧹</div><h2>清掃を実施</h2><p>店舗と場所を選び、写真と担当者名を登録します。</p></button>
         <button class="nav-card" type="button" data-view="report"><div class="icon">📋</div><h2>清掃実施確認表</h2><p>月別・店舗別に、実施担当者の記録を確認します。</p></button>
+        <button class="nav-card master-card" type="button" data-view="master"><div class="icon">🏪</div><h2>店舗マスタ登録</h2><p>店舗を追加登録します（通常は非表示の入力画面）。</p></button>
       </div>
     </main>
     <section id="embeddedApp" class="embedded-app" aria-live="polite">
@@ -51,21 +53,22 @@
     </section>
   </div>
   <script>
-    const appUrl = 'https://script.google.com/macros/s/AKfycbwdYLd3bRJRn5x32hodi88QmWmuK9JIrw3c09aS_2Hd_PCBNNkVjMo5Lm9Xcn5TFU8/exec?v=13';
+    const appUrl = 'https://script.google.com/macros/s/AKfycbwdYLd3bRJRn5x32hodi88QmWmuK9JIrw3c09aS_2Hd_PCBNNkVjMo5Lm9Xcn5TFU8/exec?v=14';
     const app = document.getElementById('embeddedApp');
     const frame = document.getElementById('appFrame');
     const title = document.getElementById('embeddedTitle');
     let pendingView = 'home';
     document.querySelectorAll('[data-view]').forEach(button => button.addEventListener('click', () => {
       pendingView = button.dataset.view;
-      title.textContent = pendingView === 'record' ? '清掃を実施' : '清掃実施確認表';
+      title.textContent = pendingView === 'record' ? '清掃を実施' : pendingView === 'report' ? '清掃実施確認表' : '店舗マスタ登録';
       app.classList.add('show');
       app.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      frame.src = appUrl + '&view=' + encodeURIComponent(pendingView);
+      frame.src = pendingView === 'master' ? appUrl + '&view=home&master=1' : appUrl + '&view=' + encodeURIComponent(pendingView);
     }));
     frame.addEventListener('load', () => {
-      frame.contentWindow.postMessage({ type: 'bonji-show-view', view: pendingView }, '*');
-      window.setTimeout(() => frame.contentWindow.postMessage({ type: 'bonji-show-view', view: pendingView }, '*'), 2500);
+      const targetView = pendingView === 'master' ? 'home' : pendingView;
+      frame.contentWindow.postMessage({ type: 'bonji-show-view', view: targetView }, '*');
+      window.setTimeout(() => frame.contentWindow.postMessage({ type: 'bonji-show-view', view: targetView }, '*'), 2500);
     });
     document.getElementById('closeApp').addEventListener('click', () => { app.classList.remove('show'); frame.src = ''; window.scrollTo({ top: 0, behavior: 'smooth' }); });
   </script>
