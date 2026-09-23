@@ -31,14 +31,14 @@
     .embedded-head h2 { margin: 0; font-size: 20px; color: #123a72; }
     .close { border: 0; background: #eaf2fb; color: #2866a5; border-radius: 999px; padding: 8px 12px; cursor: pointer; }
     iframe { display: block; width: 100%; height: 760px; border: 1px solid #d8e3ee; border-radius: 18px; background: #f4f7fb; }
-    .master-quick { margin: -6px 0 18px; } .master-quick summary { display: inline-block; cursor: pointer; color: #47627d; font-size: 13px; font-weight: 700; padding: 3px 6px; } .master-quick iframe { height: 360px; border-radius: 10px; margin-top: 5px; }
-    @media (max-width: 640px) { .shell { padding: 12px; } .brand { font-size: 19px; } h1 { font-size: 32px; } .home-grid { grid-template-columns: 1fr; } .nav-card { min-height: 170px; padding: 22px; } iframe { height: 820px; } .master-quick iframe { height: 390px; } }
+    .master-quick { margin: -6px 0 18px; } .master-quick summary { display: inline-block; cursor: pointer; color: #47627d; font-size: 13px; font-weight: 700; padding: 3px 6px; } .master-quick iframe { height: 520px; border-radius: 10px; margin-top: 5px; }
+    @media (max-width: 640px) { .shell { padding: 12px; } .brand { font-size: 19px; } h1 { font-size: 32px; } .home-grid { grid-template-columns: 1fr; } .nav-card { min-height: 170px; padding: 22px; } iframe { height: 820px; } .master-quick iframe { height: 560px; } }
   </style>
 </head>
 <body>
   <div class="shell">
     <header><div class="brand">凡事徹底｜清掃管理</div><div class="badge">漏れチェック</div></header>
-    <details id="masterQuick" class="master-quick"><summary>店舗マスタ登録</summary><iframe id="masterFrame" title="店舗マスタ登録"></iframe></details>
+    <details id="masterQuick" class="master-quick"><summary>店舗マスタ登録</summary><iframe id="masterFrame" title="店舗マスタ登録" style="display:none"></iframe></details>
     <main class="card">
       <h1>ホーム</h1>
       <p class="hint">実施入力と月ごとの確認表を選択してください。</p>
@@ -53,7 +53,7 @@
     </section>
   </div>
   <script>
-    const appUrl = 'https://script.google.com/macros/s/AKfycbwdYLd3bRJRn5x32hodi88QmWmuK9JIrw3c09aS_2Hd_PCBNNkVjMo5Lm9Xcn5TFU8/exec?v=16';
+    const appUrl = 'https://script.google.com/macros/s/AKfycbwdYLd3bRJRn5x32hodi88QmWmuK9JIrw3c09aS_2Hd_PCBNNkVjMo5Lm9Xcn5TFU8/exec?v=17';
     const app = document.getElementById('embeddedApp');
     const frame = document.getElementById('appFrame');
     const title = document.getElementById('embeddedTitle');
@@ -73,7 +73,7 @@
     document.getElementById('closeApp').addEventListener('click', () => { app.classList.remove('show'); frame.src = ''; window.scrollTo({ top: 0, behavior: 'smooth' }); });
     const masterQuick = document.getElementById('masterQuick');
     const masterFrame = document.getElementById('masterFrame');
-    masterQuick.addEventListener('toggle', () => { if (masterQuick.open && !masterFrame.src) masterFrame.src = appUrl + '&master=1'; });
+    masterQuick.addEventListener('toggle', () => { if (masterQuick.open) { masterFrame.style.display = 'block'; if (!masterFrame.src) masterFrame.src = appUrl + '&master=1'; } else { masterFrame.style.display = 'none'; masterFrame.src = ''; } });
   </script>
 </body>
 </html>
