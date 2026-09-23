@@ -1,0 +1,12 @@
+{
+  "name": "凡事徹底｜清掃実施確認表",
+  "short_name": "凡事徹底",
+  "start_url": "https://script.google.com/macros/s/AKfycbwdYLd3bRJRn5x32hodi88QmWmuK9JIrw3c09aS_2Hd_PCBNNkVjMo5Lm9Xcn5TFU8/exec",
+  "display": "standalone",
+  "background_color": "#f5f7fb",
+  "theme_color": "#2196f3",
+  "icons": [
+    { "src": "icon.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icon.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
