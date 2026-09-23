@@ -61,7 +61,7 @@
       title.textContent = pendingView === 'record' ? '清掃を実施' : '清掃実施確認表';
       app.classList.add('show');
       app.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      if (frame.src !== appUrl) frame.src = appUrl;
+      frame.src = appUrl + '?view=' + encodeURIComponent(pendingView);
       else frame.contentWindow.postMessage({ type: 'bonji-show-view', view: pendingView }, '*');
     }));
     frame.addEventListener('load', () => {
