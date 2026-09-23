@@ -66,11 +66,12 @@
       frame.src = appUrlForView(pendingView);
     }));
     frame.addEventListener('load', () => {
+      if (!frame.getAttribute('src')) return;
       const targetView = pendingView === 'master' ? 'home' : pendingView;
       frame.contentWindow.postMessage({ type: 'bonji-show-view', view: targetView }, '*');
       window.setTimeout(() => frame.contentWindow.postMessage({ type: 'bonji-show-view', view: targetView }, '*'), 2500);
     });
-    document.getElementById('closeApp').addEventListener('click', () => { app.classList.remove('show'); frame.src = ''; window.scrollTo({ top: 0, behavior: 'smooth' }); });
+    document.getElementById('closeApp').addEventListener('click', () => { pendingView = 'home'; app.classList.remove('show'); frame.removeAttribute('src'); window.scrollTo({ top: 0, behavior: 'smooth' }); });
     function appUrlForView(view) {
       const defaultStore = localStorage.getItem('bonji-default-store-id');
       return appUrl + '&view=' + encodeURIComponent(view) + (defaultStore ? '&defaultStore=' + encodeURIComponent(defaultStore) : '');
