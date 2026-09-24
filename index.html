@@ -25,18 +25,16 @@
     .nav-card .icon { font-size: 38px; }
     .nav-card h2 { margin: 18px 0 8px; font-size: 24px; }
     .nav-card p { margin: 0; color: #63758a; font-size: 16px; line-height: 1.5; }
-    .embedded-app { display: none; margin-top: 20px; }
+    .embedded-app { display: none; margin-top: 0; }
     .embedded-app.show { display: block; }
     .embedded-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
     .embedded-head h2 { margin: 0; font-size: 20px; color: #123a72; }
     .close { border: 0; background: #eaf2fb; color: #2866a5; border-radius: 999px; padding: 8px 12px; cursor: pointer; }
     .loading-overlay { display: none; position: fixed; inset: 0; z-index: 10000; background: rgba(20, 30, 45, .58); align-items: center; justify-content: center; color: #fff; font-size: 20px; font-weight: 800; }
     .loading-overlay.show { display: flex; }
-    iframe { display: block; width: 100%; height: 420px; border: 1px solid #d8e3ee; border-radius: 18px; background: #f4f7fb; }
-    .report-mode iframe { height: 420px; }
-    .full-height-mode iframe { height: 100vh; }
-    .master-quick { margin: -6px 0 18px; } .master-quick summary { display: inline-block; cursor: pointer; color: #47627d; font-size: 13px; font-weight: 700; padding: 3px 6px; } .master-quick iframe { height: 520px; border-radius: 10px; margin-top: 5px; }
-    @media (max-width: 640px) { .shell { padding: 12px; } .brand { font-size: 19px; } h1 { font-size: 32px; } .home-grid { grid-template-columns: 1fr; } .nav-card { min-height: 170px; padding: 22px; } iframe { height: 420px; } .full-height-mode iframe { height: 100dvh; } .report-mode iframe { height: 620px; } .master-quick iframe { height: 700px; } }
+    iframe { display: block; width: 100%; height: 180px; border: 0; border-radius: 0; background: transparent; }
+    .master-quick { margin: -6px 0 18px; } .master-quick summary { display: inline-block; cursor: pointer; color: #47627d; font-size: 13px; font-weight: 700; padding: 3px 6px; } .master-quick iframe { height: 180px; border: 0; border-radius: 0; margin-top: 5px; }
+    @media (max-width: 640px) { .shell { padding: 12px; } .brand { font-size: 19px; } h1 { font-size: 32px; } .home-grid { grid-template-columns: 1fr; } .nav-card { min-height: 170px; padding: 22px; } iframe { height: 180px; } .master-quick iframe { height: 180px; } }
   </style>
 </head>
 <body>
@@ -108,7 +106,7 @@
     function showParentPhoto(data) { closeParentDialog(); parentDialog = document.createElement('div'); parentDialog.style.cssText = 'position:fixed;inset:0;z-index:10001;background:rgba(0,0,0,.82);display:flex;align-items:flex-start;justify-content:center;padding:16px;overflow:auto'; parentDialog.innerHTML = '<div style="width:min(100%,720px);background:#fff;border-radius:14px;padding:12px;text-align:center"><img src="'+data.src+'" style="display:block;margin:auto;max-width:100%;max-height:70vh;object-fit:contain;border-radius:8px"><div style="font-size:12px;color:#63758a;margin-top:8px">担当者：'+data.person+'　撮影時刻：'+data.time+'</div><button type="button" style="margin-top:10px;border:0;border-radius:8px;background:#1769aa;color:#fff;padding:9px 22px;font-weight:700">閉じる</button></div>'; parentDialog.querySelector('button').onclick = closeParentDialog; parentDialog.onclick = e => { if (e.target === parentDialog) closeParentDialog(); }; document.body.appendChild(parentDialog); }
     let photographerRequester = null;
     function showPhotographerDialog(data) { closeParentDialog(); photographerRequester = data.requester; parentDialog = document.createElement('div'); parentDialog.style.cssText = 'position:fixed;inset:0;z-index:10001;background:rgba(0,0,0,.65);display:flex;align-items:flex-start;justify-content:center;padding:18px'; parentDialog.innerHTML = '<div style="width:min(100%,420px);background:#fff;border-radius:14px;padding:18px"><strong style="display:block;color:#172033;font-size:17px;margin-bottom:10px">撮影者の名前を入力してください。</strong><input id="parentPhotographer" type="text" maxlength="80" autocomplete="name" style="width:100%;box-sizing:border-box;border:1px solid #cbd8e6;border-radius:8px;padding:11px;font:inherit"><div id="parentPhotographerError" style="color:#a52d2d;font-size:12px;min-height:18px;margin-top:6px"></div><button id="parentPhotographerOk" type="button" style="width:100%;border:0;border-radius:8px;background:#1769aa;color:#fff;padding:11px;font-weight:800">登録する</button></div>'; document.body.appendChild(parentDialog); const input = parentDialog.querySelector('#parentPhotographer'); input.focus(); parentDialog.querySelector('#parentPhotographerOk').onclick = () => { const name = input.value.trim(); if (!name) { parentDialog.querySelector('#parentPhotographerError').textContent = '撮影者の名前を入力してください。'; return; } photographerRequester.postMessage({ type:'bonji-photographer-result', data:data.data, name }, '*'); closeParentDialog(); }; input.addEventListener('keydown', e => { if (e.key === 'Enter') parentDialog.querySelector('#parentPhotographerOk').click(); }); }
-    function setEmbeddedFrameHeight(target, value) { const isMobile = window.matchMedia('(max-width: 640px)').matches; if (target === frame && (pendingView === 'record' || pendingView === 'storeChecks') && isMobile) { target.style.height = Math.max(620, window.innerHeight) + 'px'; return; } const min = target === frame && app.classList.contains('report-mode') ? Math.max(620, window.innerHeight - 180) : 180; const max = Math.max(min, window.innerHeight - 170); const content = Number(value) || min; target.style.height = Math.min(Math.max(content, min), max) + 'px'; }
+    function setEmbeddedFrameHeight(target, value) { const content = Number(value) || 180; target.style.height = Math.max(180, Math.ceil(content)) + 'px'; }
     window.addEventListener('message', event => {
       const target = event.source === frame.contentWindow ? frame : (event.source === masterFrame.contentWindow ? masterFrame : null);
       if (target && event.data && event.data.type === 'bonji-frame-height') setEmbeddedFrameHeight(target, event.data.height);
