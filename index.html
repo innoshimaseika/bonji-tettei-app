@@ -4,123 +4,12 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f4f7fb">
-  <link rel="icon" type="image/png" href="icon.png">
-  <link rel="apple-touch-icon" href="icon.png">
-  <link rel="manifest" href="manifest.webmanifest">
   <title>凡事徹底｜清掃管理</title>
-  <style>
-    :root { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans JP", sans-serif; color: #172033; background: #f4f7fb; }
-    * { box-sizing: border-box; }
-    body { margin: 0; }
-    .shell { max-width: 1100px; margin: auto; min-height: 100vh; padding: 14px; }
-    header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
-    .brand { font-weight: 800; font-size: 24px; color: #123a72; }
-    .badge { font-size: 12px; color: #54708d; background: #eaf2fb; padding: 8px 12px; border-radius: 999px; }
-    .card { background: #fff; border: 1px solid #e5ebf2; border-radius: 22px; padding: 26px; box-shadow: 0 8px 24px #183b5d0d; }
-    h1 { margin: 28px 0 14px; font-size: 40px; }
-    .hint { color: #63758a; font-size: 16px; margin: 0 0 22px; }
-    .home-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
-    .nav-card { text-align: left; cursor: pointer; min-height: 218px; border: 1px solid #cbdced; background: #fff; border-radius: 20px; padding: 28px; transition: .2s; }
-    .nav-card:hover, .nav-card:focus-visible { transform: translateY(-2px); border-color: #5b9bd5; box-shadow: 0 10px 25px #1c4d7d18; outline: none; }
-    .nav-card .icon { font-size: 38px; }
-    .nav-card h2 { margin: 18px 0 8px; font-size: 24px; }
-    .nav-card p { margin: 0; color: #63758a; font-size: 16px; line-height: 1.5; }
-    .embedded-app { display: none; margin-top: 0; }
-    .embedded-app.show { display: block; }
-    .embedded-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
-    .embedded-head h2 { margin: 0; font-size: 20px; color: #123a72; }
-    .close { border: 0; background: #eaf2fb; color: #2866a5; border-radius: 999px; padding: 8px 12px; cursor: pointer; }
-    .loading-overlay { display: none; position: fixed; inset: 0; z-index: 10000; background: rgba(20, 30, 45, .58); align-items: center; justify-content: center; color: #fff; font-size: 20px; font-weight: 800; }
-    .loading-overlay.show { display: flex; }
-    iframe { display: block; width: 100%; height: calc(100vh - 90px); min-height: 520px; border: 0; border-radius: 0; background: transparent; }
-    .master-quick { margin: -6px 0 18px; } .master-quick summary { display: inline-block; cursor: pointer; color: #47627d; font-size: 13px; font-weight: 700; padding: 3px 6px; } .master-quick iframe { height: 180px; min-height: 180px; border: 0; border-radius: 0; margin-top: 5px; }
-    @media (max-width: 640px) { .shell { padding: 12px; } .brand { font-size: 19px; } h1 { font-size: 32px; } .home-grid { grid-template-columns: 1fr; } .nav-card { min-height: 170px; padding: 22px; } iframe { height: calc(100dvh - 90px); min-height: 520px; } .master-quick iframe { height: 180px; min-height: 180px; } }
-  </style>
+  <script>
+    location.replace('https://script.google.com/macros/s/AKfycbwdYLd3bRJRn5x32hodi88QmWmuK9JIrw3c09aS_2Hd_PCBNNkVjMo5Lm9Xcn5TFU8/exec?v=84');
+  </script>
 </head>
 <body>
-  <div class="shell">
-    <header><div class="brand">凡事徹底アプリ</div></header>
-    <details id="masterQuick" class="master-quick"><summary>店舗マスタ登録</summary><iframe id="masterFrame" title="店舗マスタ登録" style="display:none"></iframe></details>
-    <main class="card">
-      <div class="home-grid">
-        <button class="nav-card" type="button" data-view="record"><div class="icon">🧹</div><h2>清掃を実施</h2><p>店舗と場所を選び、写真と担当者名を登録します。</p></button>
-        <button class="nav-card" type="button" data-view="report"><div class="icon">📋</div><h2>清掃実施確認表</h2><p>月別・店舗別に、実施担当者の記録を確認します。</p></button>
-        <button class="nav-card" type="button" data-view="storeChecks"><div class="icon">🌡️</div><h2>冷凍冷蔵庫温度チェック</h2><p>冷蔵庫・冷凍庫の温度を入力し、入力時刻を自動記録します。</p></button>
-      </div>
-    </main>
-    <section id="embeddedApp" class="embedded-app" aria-live="polite">
-      <div class="embedded-head"><h2 id="embeddedTitle">アプリ</h2><button id="closeApp" class="close" type="button">閉じる</button></div>
-      <iframe id="appFrame" title="凡事徹底アプリ" allow="camera"></iframe>
-    </section>
-  </div>
-  <div id="loadingOverlay" class="loading-overlay" role="status" aria-live="polite">読み込み中…</div>
-  <script>
-    const appUrl = 'https://script.google.com/macros/s/AKfycbwdYLd3bRJRn5x32hodi88QmWmuK9JIrw3c09aS_2Hd_PCBNNkVjMo5Lm9Xcn5TFU8/exec?v=83';
-    const app = document.getElementById('embeddedApp');
-    const frame = document.getElementById('appFrame');
-    const title = document.getElementById('embeddedTitle');
-    const loadingOverlay = document.getElementById('loadingOverlay');
-    let pendingView = 'home';
-    document.querySelectorAll('[data-view]').forEach(button => button.addEventListener('click', () => {
-      pendingView = button.dataset.view;
-      document.querySelector('main.card').style.display = 'none';
-      title.textContent = pendingView === 'record' ? '清掃を実施' : pendingView === 'report' ? '清掃実施確認表' : '冷凍冷蔵庫温度チェック';
-      app.classList.add('show');
-      app.classList.toggle('full-height-mode', pendingView === 'record' || pendingView === 'storeChecks');
-      app.classList.toggle('report-mode', pendingView === 'report');
-      loadingOverlay.classList.add('show');
-      app.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      frame.src = appUrlForView(pendingView);
-      window.setTimeout(() => loadingOverlay.classList.remove('show'), 30000);
-    }));
-    frame.addEventListener('load', () => {
-      if (!frame.getAttribute('src')) return;
-      window.setTimeout(() => loadingOverlay.classList.remove('show'), 6000);
-      const targetView = pendingView === 'master' ? 'home' : pendingView;
-      frame.contentWindow.postMessage({ type: 'bonji-show-view', view: targetView }, '*');
-      window.setTimeout(() => frame.contentWindow.postMessage({ type: 'bonji-show-view', view: targetView }, '*'), 2500);
-    });
-    document.getElementById('closeApp').addEventListener('click', () => { pendingView = 'home'; loadingOverlay.classList.remove('show'); app.classList.remove('show'); frame.removeAttribute('src'); document.querySelector('main.card').style.display = ''; window.scrollTo({ top: 0, behavior: 'smooth' }); });
-    function appUrlForView(view) {
-      const defaultStore = localStorage.getItem('bonji-default-store-id');
-      return appUrl + '&view=' + encodeURIComponent(view) + (defaultStore ? '&defaultStore=' + encodeURIComponent(defaultStore) : '');
-    }
-    let parentCameraStream = null;
-    let parentCameraLayer = null;
-    let cameraRequester = null;
-    function closeParentCamera() { if (parentCameraStream) { parentCameraStream.getTracks().forEach(track => track.stop()); parentCameraStream = null; } if (parentCameraLayer) { parentCameraLayer.remove(); parentCameraLayer = null; } }
-    function openParentCamera() {
-      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { alert('このブラウザではカメラを起動できません。SafariまたはChromeで開いてください。'); return; }
-      closeParentCamera();
-      parentCameraLayer = document.createElement('div');
-      parentCameraLayer.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.88);display:flex;align-items:center;justify-content:center;padding:16px';
-      parentCameraLayer.innerHTML = '<div style="width:min(100%,520px);background:#fff;border-radius:16px;padding:14px"><video id="parentCameraPreview" autoplay playsinline muted style="display:block;width:100%;max-height:65vh;object-fit:cover;border-radius:10px;background:#111"></video><div style="display:flex;gap:8px;margin-top:12px"><button id="parentTakePhoto" type="button" style="flex:1;border:0;border-radius:10px;background:#1769aa;color:#fff;padding:13px;font-weight:800">撮影する</button><button id="parentCancelCamera" type="button" style="border:0;border-radius:10px;background:#eaf2fb;color:#2866a5;padding:13px">キャンセル</button></div></div>';
-      document.body.appendChild(parentCameraLayer);
-      const video = document.getElementById('parentCameraPreview');
-      document.getElementById('parentCancelCamera').onclick = closeParentCamera;
-      document.getElementById('parentTakePhoto').onclick = () => { if (!video.videoWidth) { alert('カメラの準備中です。少し待ってから撮影してください。'); return; } const canvas = document.createElement('canvas'); canvas.width = video.videoWidth; canvas.height = video.videoHeight; canvas.getContext('2d').drawImage(video, 0, 0); canvas.toBlob(blob => { const reader = new FileReader(); reader.onload = () => { closeParentCamera(); if (cameraRequester) cameraRequester.postMessage({ type: 'bonji-camera-photo', data: reader.result, name: 'cleaning-' + Date.now() + '.jpg' }, '*'); frame.contentWindow.postMessage({ type: 'bonji-camera-photo', data: reader.result, name: 'cleaning-' + Date.now() + '.jpg' }, '*'); }; reader.readAsDataURL(blob); }, 'image/jpeg', .9); };
-      navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' } }, audio: false }).catch(() => navigator.mediaDevices.getUserMedia({ video: true, audio: false })).then(stream => { parentCameraStream = stream; video.srcObject = stream; }).catch(error => { closeParentCamera(); alert('カメラを起動できませんでした。Chromeのサイト設定でカメラを許可してください。(' + (error.name || '権限エラー') + ')'); });
-    }
-    let parentDialog = null;
-    function closeParentDialog() { if (parentDialog) { parentDialog.remove(); parentDialog = null; } }
-    function showParentPhoto(data) { closeParentDialog(); parentDialog = document.createElement('div'); parentDialog.style.cssText = 'position:fixed;inset:0;z-index:10001;background:rgba(0,0,0,.82);display:flex;align-items:flex-start;justify-content:center;padding:16px;overflow:auto'; parentDialog.innerHTML = '<div style="width:min(100%,720px);background:#fff;border-radius:14px;padding:12px;text-align:center"><img src="'+data.src+'" style="display:block;margin:auto;max-width:100%;max-height:70vh;object-fit:contain;border-radius:8px"><div style="font-size:12px;color:#63758a;margin-top:8px">担当者：'+data.person+'　撮影時刻：'+data.time+'</div><button type="button" style="margin-top:10px;border:0;border-radius:8px;background:#1769aa;color:#fff;padding:9px 22px;font-weight:700">閉じる</button></div>'; parentDialog.querySelector('button').onclick = closeParentDialog; parentDialog.onclick = e => { if (e.target === parentDialog) closeParentDialog(); }; document.body.appendChild(parentDialog); }
-    let photographerRequester = null;
-    function showPhotographerDialog(data) { closeParentDialog(); photographerRequester = data.requester; parentDialog = document.createElement('div'); parentDialog.style.cssText = 'position:fixed;inset:0;z-index:10001;background:rgba(0,0,0,.65);display:flex;align-items:flex-start;justify-content:center;padding:18px'; parentDialog.innerHTML = '<div style="width:min(100%,420px);background:#fff;border-radius:14px;padding:18px"><strong style="display:block;color:#172033;font-size:17px;margin-bottom:10px">撮影者の名前を入力してください。</strong><input id="parentPhotographer" type="text" maxlength="80" autocomplete="name" style="width:100%;box-sizing:border-box;border:1px solid #cbd8e6;border-radius:8px;padding:11px;font:inherit"><div id="parentPhotographerError" style="color:#a52d2d;font-size:12px;min-height:18px;margin-top:6px"></div><button id="parentPhotographerOk" type="button" style="width:100%;border:0;border-radius:8px;background:#1769aa;color:#fff;padding:11px;font-weight:800">登録する</button></div>'; document.body.appendChild(parentDialog); const input = parentDialog.querySelector('#parentPhotographer'); input.focus(); parentDialog.querySelector('#parentPhotographerOk').onclick = () => { const name = input.value.trim(); if (!name) { parentDialog.querySelector('#parentPhotographerError').textContent = '撮影者の名前を入力してください。'; return; } photographerRequester.postMessage({ type:'bonji-photographer-result', data:data.data, name }, '*'); closeParentDialog(); }; input.addEventListener('keydown', e => { if (e.key === 'Enter') parentDialog.querySelector('#parentPhotographerOk').click(); }); }
-    function setEmbeddedFrameHeight(target, value) { const content = Number(value) || 0; const minimum = target === frame ? Math.max(520, window.innerHeight - 90) : 180; target.style.height = Math.max(minimum, Math.ceil(content)) + 'px'; }
-    window.addEventListener('message', event => {
-      const target = event.source === frame.contentWindow ? frame : (event.source === masterFrame.contentWindow ? masterFrame : null);
-      if (target && event.data && event.data.type === 'bonji-frame-height') setEmbeddedFrameHeight(target, event.data.height);
-      if (event.source === frame.contentWindow && event.data && event.data.type === 'bonji-home') { pendingView = 'home'; loadingOverlay.classList.remove('show'); app.classList.remove('show'); frame.removeAttribute('src'); document.querySelector('main.card').style.display = ''; window.scrollTo({ top: 0, behavior: 'smooth' }); }
-      if (event.source === frame.contentWindow && event.data && event.data.type === 'bonji-data-ready') loadingOverlay.classList.remove('show');
-      if (event.data && event.data.type === 'bonji-default-store' && event.data.storeId) localStorage.setItem('bonji-default-store-id', event.data.storeId);
-      if (event.data && event.data.type === 'bonji-open-camera') { cameraRequester = event.source; openParentCamera(); }
-      if (event.data && event.data.type === 'bonji-show-report-photo') showParentPhoto(event.data);
-      if (event.data && event.data.type === 'bonji-request-photographer') showPhotographerDialog({ data:event.data.data, requester:event.source });
-    });
-    window.addEventListener('resize', () => { if (frame.contentWindow) frame.contentWindow.postMessage({ type: 'bonji-frame-height-request' }, '*'); if (masterFrame.contentWindow) masterFrame.contentWindow.postMessage({ type: 'bonji-frame-height-request' }, '*'); });
-    const masterQuick = document.getElementById('masterQuick');
-    const masterFrame = document.getElementById('masterFrame');
-    masterQuick.addEventListener('toggle', () => { if (masterQuick.open) { masterFrame.style.display = 'block'; if (!masterFrame.src) masterFrame.src = appUrl + '&master=1'; } else { masterFrame.style.display = 'none'; masterFrame.src = ''; } });
-  </script>
+  <p>読み込み中です。自動で切り替わらない場合は、<a href="https://script.google.com/macros/s/AKfycbwdYLd3bRJRn5x32hodi88QmWmuK9JIrw3c09aS_2Hd_PCBNNkVjMo5Lm9Xcn5TFU8/exec?v=84">こちら</a>をタップしてください。</p>
 </body>
 </html>
