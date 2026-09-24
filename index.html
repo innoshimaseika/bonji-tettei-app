@@ -47,6 +47,7 @@
       <div class="home-grid">
         <button class="nav-card" type="button" data-view="record"><div class="icon">🧹</div><h2>清掃を実施</h2><p>店舗と場所を選び、写真と担当者名を登録します。</p></button>
         <button class="nav-card" type="button" data-view="report"><div class="icon">📋</div><h2>清掃実施確認表</h2><p>月別・店舗別に、実施担当者の記録を確認します。</p></button>
+        <button class="nav-card" type="button" data-view="storeChecks"><div class="icon">🌡️</div><h2>冷凍冷蔵庫温度チェック</h2><p>冷蔵庫・冷凍庫の温度を入力し、入力時刻を自動記録します。</p></button>
       </div>
     </main>
     <section id="embeddedApp" class="embedded-app" aria-live="polite">
@@ -65,7 +66,7 @@
     document.querySelectorAll('[data-view]').forEach(button => button.addEventListener('click', () => {
       pendingView = button.dataset.view;
       document.querySelector('main.card').style.display = 'none';
-      title.textContent = pendingView === 'record' ? '清掃を実施' : '清掃実施確認表';
+      title.textContent = pendingView === 'record' ? '清掃を実施' : pendingView === 'report' ? '清掃実施確認表' : '冷凍冷蔵庫温度チェック';
       app.classList.add('show');
       app.classList.toggle('record-mode', pendingView === 'record');
       app.classList.toggle('report-mode', pendingView === 'report');
