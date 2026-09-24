@@ -43,9 +43,10 @@
     <main class="card">
       <div class="home-grid">
         <button class="nav-card" type="button" data-view="master"><div class="icon">🏪</div><h2>店舗マスタ登録</h2><p>店舗の登録・編集・削除を行います。</p></button>
+        <button class="nav-card" type="button" data-view="temperatureMaster"><div class="icon">🌡️</div><h2>温度チェックマスタ</h2><p>冷凍冷蔵庫の場所と設定温度を登録・編集します。</p></button>
         <button class="nav-card" type="button" data-view="record"><div class="icon">🧹</div><h2>清掃を実施</h2><p>店舗と場所を選び、写真と担当者名を登録します。</p></button>
         <button class="nav-card" type="button" data-view="report"><div class="icon">📋</div><h2>清掃実施確認表</h2><p>月別・店舗別に、実施担当者の記録を確認します。</p></button>
-        <button class="nav-card" type="button" data-view="storeChecks"><div class="icon">🌡️</div><h2>冷凍冷蔵庫温度チェック</h2><p>冷蔵庫・冷凍庫の温度を入力し、入力時刻を自動記録します。</p></button>
+        <button class="nav-card" type="button" data-view="storeChecks"><div class="icon">🌡️</div><h2>温度チェック</h2><p>冷蔵庫・冷凍庫の温度を入力し、入力時刻を自動記録します。</p></button>
         <button class="nav-card" type="button" data-view="temperatureReport"><div class="icon">📊</div><h2>温度チェック実施確認表</h2><p>店舗ごとの月間チェック状況を確認します。</p></button>
       </div>
     </main>
@@ -56,7 +57,7 @@
   </div>
   <div id="loadingOverlay" class="loading-overlay" role="status" aria-live="polite">読み込み中…</div>
   <script>
-    const appUrl = 'https://script.google.com/macros/s/AKfycbwdYLd3bRJRn5x32hodi88QmWmuK9JIrw3c09aS_2Hd_PCBNNkVjMo5Lm9Xcn5TFU8/exec?v=90';
+    const appUrl = 'https://script.google.com/macros/s/AKfycbwdYLd3bRJRn5x32hodi88QmWmuK9JIrw3c09aS_2Hd_PCBNNkVjMo5Lm9Xcn5TFU8/exec?v=91';
     const app = document.getElementById('embeddedApp');
     const frame = document.getElementById('appFrame');
     const title = document.getElementById('embeddedTitle');
@@ -65,13 +66,13 @@
     document.querySelectorAll('[data-view]').forEach(button => button.addEventListener('click', () => {
       pendingView = button.dataset.view;
       document.querySelector('main.card').style.display = 'none';
-      title.textContent = pendingView === 'master' ? '店舗マスタ登録' : pendingView === 'record' ? '清掃を実施' : pendingView === 'report' ? '清掃実施確認表' : pendingView === 'temperatureReport' ? '温度チェック実施確認表' : '冷凍冷蔵庫温度チェック';
+      title.textContent = pendingView === 'master' ? '店舗マスタ登録' : pendingView === 'temperatureMaster' ? '温度チェックマスタ' : pendingView === 'record' ? '清掃を実施' : pendingView === 'report' ? '清掃実施確認表' : pendingView === 'temperatureReport' ? '温度チェック実施確認表' : '温度チェック';
       app.classList.add('show');
       app.classList.toggle('full-height-mode', pendingView === 'record' || pendingView === 'storeChecks');
       app.classList.toggle('report-mode', pendingView === 'report' || pendingView === 'temperatureReport');
       loadingOverlay.classList.add('show');
       app.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      frame.src = pendingView === 'master' ? appUrl + '&embedded=1&master=1' : appUrlForView(pendingView);
+      frame.src = pendingView === 'master' || pendingView === 'temperatureMaster' ? appUrl + '&embedded=1&master=1' + (pendingView === 'temperatureMaster' ? '&temperatureMaster=1' : '') : appUrlForView(pendingView);
       window.setTimeout(() => loadingOverlay.classList.remove('show'), 30000);
     }));
     frame.addEventListener('load', () => {
