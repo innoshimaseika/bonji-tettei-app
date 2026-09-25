@@ -59,7 +59,7 @@
       <div class="master-chooser-card">
         <h2>登録するマスタを選択</h2>
         <button class="master-choice" type="button" onclick="openMasterView('master')">店舗マスタ</button>
-        <button class="master-choice" type="button" onclick="openMasterView('temperatureMaster')">冷蔵庫マスタ</button>
+        <button class="master-choice" type="button" onclick="openMasterView('temperatureMaster')">冷凍冷蔵庫マスタ</button>
         <button class="close" type="button" style="margin-top:12px" onclick="closeMasterChooser()">戻る</button>
       </div>
     </section>
@@ -78,7 +78,7 @@
   </div>
   <div id="loadingOverlay" class="loading-overlay" role="status" aria-live="polite">読み込み中…</div>
   <script>
-    const appUrl = 'https://script.google.com/macros/s/AKfycbwdYLd3bRJRn5x32hodi88QmWmuK9JIrw3c09aS_2Hd_PCBNNkVjMo5Lm9Xcn5TFU8/exec?v=107';
+    const appUrl = 'https://script.google.com/macros/s/AKfycbwdYLd3bRJRn5x32hodi88QmWmuK9JIrw3c09aS_2Hd_PCBNNkVjMo5Lm9Xcn5TFU8/exec?v=108';
     const app = document.getElementById('embeddedApp');
     const frame = document.getElementById('appFrame');
     const title = document.getElementById('embeddedTitle');
@@ -89,7 +89,7 @@
       if (pendingView === 'masterPortal') { document.getElementById('masterChooser').classList.add('show'); document.querySelector('main.card').style.display = 'none'; document.getElementById('masterChooser').scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
       if (pendingView === 'monthlyPortal') { document.getElementById('monthlyChooser').classList.add('show'); document.querySelector('main.card').style.display = 'none'; document.getElementById('monthlyChooser').scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
       document.querySelector('main.card').style.display = 'none';
-      title.textContent = pendingView === 'master' ? '店舗マスタ登録' : pendingView === 'temperatureMaster' ? '温度チェックマスタ' : pendingView === 'record' ? '清掃を実施' : pendingView === 'report' ? '清掃実施確認表' : pendingView === 'temperatureReport' ? '温度チェック実施確認表' : '温度チェック';
+      title.textContent = pendingView === 'master' ? '店舗マスタ' : pendingView === 'temperatureMaster' ? '冷凍冷蔵庫マスタ' : pendingView === 'record' ? '清掃を実施' : pendingView === 'report' ? '清掃実施確認表' : pendingView === 'temperatureReport' ? '温度チェック実施確認表' : '温度チェック';
       app.classList.add('show'); document.body.classList.add('app-open');
       app.classList.toggle('full-height-mode', pendingView === 'record' || pendingView === 'storeChecks');
       app.classList.toggle('report-mode', pendingView === 'report' || pendingView === 'temperatureReport');
