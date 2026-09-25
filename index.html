@@ -38,9 +38,6 @@
     .master-chooser-card h2 { margin: 0 0 14px; color: #123a72; font-size: 22px; }
     .master-choice { width: 100%; margin-top: 9px; padding: 13px 16px; border: 1px solid #cbdced; border-radius: 10px; background: #fff; color: #123a72; text-align: left; font: inherit; font-weight: 700; cursor: pointer; }
     .master-choice:hover { background: #eff7ff; }
-    .master-choice-fold { margin-top: 9px; border: 1px solid #cbdced; border-radius: 10px; background: #fff; color: #123a72; }
-    .master-choice-fold summary { padding: 13px 16px; cursor: pointer; font-weight: 700; }
-    .master-choice-fold .master-choice { width: calc(100% - 20px); margin: 0 10px 10px; padding: 9px 12px; }
     iframe { display: block; width: 100%; height: calc(100vh - 90px); min-height: 520px; border: 0; border-radius: 0; background: transparent; }
     .master-quick { margin: -6px 0 18px; } .master-quick summary { display: inline-block; cursor: pointer; color: #47627d; font-size: 13px; font-weight: 700; padding: 3px 6px; } .master-quick iframe { height: 180px; min-height: 180px; border: 0; border-radius: 0; margin-top: 5px; }
     @media (max-width: 640px) { .shell { padding: 12px; } .brand { font-size: 19px; } h1 { font-size: 32px; } .nav-card { grid-template-columns: 58px 1fr; min-height: 112px; padding: 16px 18px; border-radius: 18px; } .nav-card .icon { font-size: 31px; } .nav-card h2 { font-size: 22px; } .nav-card p { font-size: 14px; } iframe { height: calc(100dvh - 90px); min-height: 520px; } .master-quick iframe { height: 180px; min-height: 180px; } }
@@ -61,8 +58,8 @@
     <section id="masterChooser" class="master-chooser" aria-live="polite">
       <div class="master-chooser-card">
         <h2>登録するマスタを選択</h2>
-        <details class="master-choice-fold"><summary>店舗マスタ</summary><button class="master-choice" type="button" onclick="openMasterView('master')">店舗マスタを開く</button></details>
-        <details class="master-choice-fold"><summary>冷凍冷蔵庫マスタ</summary><button class="master-choice" type="button" onclick="openMasterView('temperatureMaster')">冷凍冷蔵庫マスタを開く</button></details>
+        <button class="master-choice" type="button" onclick="openMasterView('master')">店舗マスタ</button>
+        <button class="master-choice" type="button" onclick="openMasterView('temperatureMaster')">冷蔵庫マスタ</button>
         <button class="close" type="button" style="margin-top:12px" onclick="closeMasterChooser()">戻る</button>
       </div>
     </section>
