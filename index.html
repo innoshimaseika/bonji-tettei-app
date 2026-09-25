@@ -32,8 +32,7 @@
     .close { border: 0; background: #eaf2fb; color: #2866a5; border-radius: 999px; padding: 8px 12px; cursor: pointer; }
     .loading-overlay { display: none; position: fixed; inset: 0; z-index: 10000; background: rgba(20, 30, 45, .58); align-items: center; justify-content: center; color: #fff; font-size: 20px; font-weight: 800; }
     .loading-overlay.show { display: flex; }
-    .site-footer { margin: 18px 0 4px; text-align: center; color: #8a98a8; font-size: 11px; }
-    .app-open > .shell > header, .app-open .embedded-head, .app-open > .site-footer { display: none; }
+    .app-open > .shell > header, .app-open .embedded-head { display: none; }
     .master-chooser { display: none; margin-top: 14px; }
     .master-chooser.show { display: block; }
     .master-chooser-card { max-width: 760px; margin: 0 auto; padding: 22px; border: 1px solid #cbdced; border-radius: 18px; background: #fff; }
@@ -78,9 +77,8 @@
     </section>
   </div>
   <div id="loadingOverlay" class="loading-overlay" role="status" aria-live="polite">読み込み中…</div>
-  <footer class="site-footer">© 2026 凡事徹底アプリ</footer>
   <script>
-    const appUrl = 'https://script.google.com/macros/s/AKfycbwdYLd3bRJRn5x32hodi88QmWmuK9JIrw3c09aS_2Hd_PCBNNkVjMo5Lm9Xcn5TFU8/exec?v=101';
+    const appUrl = 'https://script.google.com/macros/s/AKfycbwdYLd3bRJRn5x32hodi88QmWmuK9JIrw3c09aS_2Hd_PCBNNkVjMo5Lm9Xcn5TFU8/exec?v=102';
     const app = document.getElementById('embeddedApp');
     const frame = document.getElementById('appFrame');
     const title = document.getElementById('embeddedTitle');
