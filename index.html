@@ -39,6 +39,11 @@
     .master-chooser-card h2 { margin: 0 0 14px; color: #123a72; font-size: 22px; }
     .master-choice { width: 100%; margin-top: 9px; padding: 13px 16px; border: 1px solid #cbdced; border-radius: 10px; background: #fff; color: #123a72; text-align: left; font: inherit; font-weight: 700; cursor: pointer; }
     .master-choice:hover { background: #eff7ff; }
+    .monthly-choice { display: grid; grid-template-columns: 48px 1fr; grid-template-areas: "icon title" "icon desc"; align-items: center; width: 100%; min-height: 104px; margin-top: 10px; padding: 15px 18px; border: 1px solid #cbdced; border-radius: 14px; background: #fff; color: #123a72; text-align: left; font: inherit; cursor: pointer; }
+    .monthly-choice:hover { background: #eff7ff; border-color: #5b9bd5; }
+    .monthly-choice .icon { grid-area: icon; font-size: 28px; }
+    .monthly-choice strong { grid-area: title; color: #3e88df; font-size: 21px; }
+    .monthly-choice small { grid-area: desc; color: #63758a; font-size: 13px; margin-top: 3px; }
     iframe { display: block; width: 100%; height: calc(100vh - 90px); min-height: 520px; border: 0; border-radius: 0; background: transparent; }
     .master-quick { margin: -6px 0 18px; } .master-quick summary { display: inline-block; cursor: pointer; color: #47627d; font-size: 13px; font-weight: 700; padding: 3px 6px; } .master-quick iframe { height: 180px; min-height: 180px; border: 0; border-radius: 0; margin-top: 5px; }
     @media (max-width: 640px) { .shell { padding: 8px; } header { margin-bottom: 8px; } .brand { font-size: 18px; } h1 { font-size: 30px; } main.card { padding: 10px; } .home-grid { gap: 8px; } .nav-card { grid-template-columns: 46px 1fr; height: 86px; padding: 10px 12px; border-radius: 14px; } .nav-card .icon { font-size: 25px; } .nav-card h2 { font-size: 18px; margin-bottom: 2px; } .nav-card p { font-size: 12px; line-height: 1.25; } iframe { height: calc(100dvh - 90px); min-height: 520px; } .master-quick iframe { height: 180px; min-height: 180px; } }
@@ -66,8 +71,8 @@
     <section id="monthlyChooser" class="master-chooser" aria-live="polite">
       <div class="master-chooser-card">
         <h2>確認表を選択</h2>
-        <button class="master-choice" type="button" onclick="openMonthlyView('report')">清掃実施確認表</button>
-        <button class="master-choice" type="button" onclick="openMonthlyView('temperatureReport')">温度チェック確認表</button>
+        <button class="monthly-choice" type="button" onclick="openMonthlyView('report')"><span class="icon">🧹</span><strong>清掃確認 月次表</strong><small>店舗ごとの清掃実施状況を確認します。</small></button>
+        <button class="monthly-choice" type="button" onclick="openMonthlyView('temperatureReport')"><span class="icon">🌡️</span><strong>温度確認 月次表</strong><small>店舗ごとの温度チェック状況を確認します。</small></button>
         <button class="close" type="button" style="margin-top:12px" onclick="closeMonthlyChooser()">戻る</button>
       </div>
     </section>
