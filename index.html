@@ -83,7 +83,7 @@
   </div>
   <div id="loadingOverlay" class="loading-overlay" role="status" aria-live="polite">読み込み中…</div>
   <script>
-    const appUrl = 'https://script.google.com/macros/s/AKfycbwdYLd3bRJRn5x32hodi88QmWmuK9JIrw3c09aS_2Hd_PCBNNkVjMo5Lm9Xcn5TFU8/exec?v=138';
+    const appUrl = 'https://script.google.com/macros/s/AKfycbwdYLd3bRJRn5x32hodi88QmWmuK9JIrw3c09aS_2Hd_PCBNNkVjMo5Lm9Xcn5TFU8/exec?v=139';
     const app = document.getElementById('embeddedApp');
     const frame = document.getElementById('appFrame');
     const title = document.getElementById('embeddedTitle');
@@ -166,7 +166,7 @@
       document.body.appendChild(parentCameraLayer);
       const video = document.getElementById('parentCameraPreview');
       document.getElementById('parentCancelCamera').onclick = closeParentCamera;
-      document.getElementById('parentTakePhoto').onclick = () => { if (!video.videoWidth) { alert('カメラの準備中です。少し待ってから撮影してください。'); return; } const canvas = document.createElement('canvas'); canvas.width = video.videoWidth; canvas.height = video.videoHeight; canvas.getContext('2d').drawImage(video, 0, 0); canvas.toBlob(blob => { const reader = new FileReader(); reader.onload = () => { closeParentCamera(); if (cameraRequester) cameraRequester.postMessage({ type: 'bonji-camera-photo', data: reader.result, name: 'cleaning-' + Date.now() + '.jpg' }, '*'); frame.contentWindow.postMessage({ type: 'bonji-camera-photo', data: reader.result, name: 'cleaning-' + Date.now() + '.jpg' }, '*'); }; reader.readAsDataURL(blob); }, 'image/jpeg', .9); };
+      document.getElementById('parentTakePhoto').onclick = () => { if (!video.videoWidth) { alert('カメラの準備中です。少し待ってから撮影してください。'); return; } const takenAt = Date.now(); const canvas = document.createElement('canvas'); canvas.width = video.videoWidth; canvas.height = video.videoHeight; canvas.getContext('2d').drawImage(video, 0, 0); canvas.toBlob(blob => { const reader = new FileReader(); reader.onload = () => { closeParentCamera(); const message = { type: 'bonji-camera-photo', data: reader.result, name: 'cleaning-' + takenAt + '.jpg', takenAt }; if (cameraRequester) cameraRequester.postMessage(message, '*'); frame.contentWindow.postMessage(message, '*'); }; reader.readAsDataURL(blob); }, 'image/jpeg', .9); };
       navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' } }, audio: false }).catch(() => navigator.mediaDevices.getUserMedia({ video: true, audio: false })).then(stream => { parentCameraStream = stream; video.srcObject = stream; }).catch(error => { closeParentCamera(); alert('カメラを起動できませんでした。Chromeのサイト設定でカメラを許可してください。(' + (error.name || '権限エラー') + ')'); });
     }
     let parentDialog = null;
@@ -183,7 +183,7 @@
       if (event.data && event.data.type === 'bonji-default-store' && event.data.storeId) localStorage.setItem('bonji-default-store-id', event.data.storeId);
       if (event.data && event.data.type === 'bonji-open-camera') { cameraRequester = event.source; openParentCamera(); }
       if (event.data && event.data.type === 'bonji-show-report-photo') showParentPhoto(event.data);
-      if (event.data && event.data.type === 'bonji-request-photographer') showPhotographerDialog({ data:event.data.data, requester:event.source });
+      if (event.data && event.data.type === 'bonji-request-photographer') showPhotographerDialog({ data:event.data.data, takenAt:event.data.takenAt, requester:event.source });
     });
     window.addEventListener('resize', () => { if (frame.contentWindow) frame.contentWindow.postMessage({ type: 'bonji-frame-height-request' }, '*'); });
   </script>
