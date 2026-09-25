@@ -110,8 +110,9 @@
       frame.contentWindow.postMessage({ type: 'bonji-show-view', view: targetView }, '*');
       window.setTimeout(() => frame.contentWindow.postMessage({ type: 'bonji-show-view', view: targetView }, '*'), 2500);
     });
-    function closeMasterChooser() { document.getElementById('masterChooser').classList.remove('show'); document.querySelector('main.card').style.display = ''; window.scrollTo({ top: 0, behavior: 'smooth' }); }
-    function closeMonthlyChooser() { document.getElementById('monthlyChooser').classList.remove('show'); document.querySelector('main.card').style.display = ''; window.scrollTo({ top: 0, behavior: 'smooth' }); }
+    function showHome() { pendingView = 'home'; loadingOverlay.classList.remove('show'); document.getElementById('masterChooser').classList.remove('show'); document.getElementById('monthlyChooser').classList.remove('show'); app.classList.remove('show'); document.body.classList.remove('app-open'); frame.removeAttribute('src'); frame.style.height = ''; document.querySelector('main.card').style.display = ''; document.documentElement.scrollTop = 0; document.body.scrollTop = 0; window.scrollTo(0, 0); }
+    function closeMasterChooser() { showHome(); }
+    function closeMonthlyChooser() { showHome(); }
     function openMasterView(view) {
       document.getElementById('masterChooser').classList.remove('show');
       pendingView = view;
@@ -133,7 +134,7 @@
       frame.src = appUrlForView(view);
       window.setTimeout(() => loadingOverlay.classList.remove('show'), 30000);
     }
-    document.getElementById('closeApp').addEventListener('click', () => { pendingView = 'home'; loadingOverlay.classList.remove('show'); app.classList.remove('show'); document.body.classList.remove('app-open'); frame.removeAttribute('src'); document.querySelector('main.card').style.display = ''; window.scrollTo({ top: 0, behavior: 'smooth' }); });
+    document.getElementById('closeApp').addEventListener('click', showHome);
     function appUrlForView(view) {
       const defaultStore = localStorage.getItem('bonji-default-store-id');
       return appUrl + '&embedded=1&view=' + encodeURIComponent(view) + (defaultStore ? '&defaultStore=' + encodeURIComponent(defaultStore) : '');
@@ -163,7 +164,7 @@
     window.addEventListener('message', event => {
       const target = event.source === frame.contentWindow ? frame : null;
       if (target && event.data && event.data.type === 'bonji-frame-height') setEmbeddedFrameHeight(target, event.data.height);
-      if (event.source === frame.contentWindow && event.data && event.data.type === 'bonji-home') { pendingView = 'home'; loadingOverlay.classList.remove('show'); app.classList.remove('show'); document.body.classList.remove('app-open'); frame.removeAttribute('src'); document.querySelector('main.card').style.display = ''; window.scrollTo({ top: 0, behavior: 'smooth' }); }
+      if (event.source === frame.contentWindow && event.data && event.data.type === 'bonji-home') showHome();
       if (event.source === frame.contentWindow && event.data && event.data.type === 'bonji-data-ready') loadingOverlay.classList.remove('show');
       if (event.data && event.data.type === 'bonji-default-store' && event.data.storeId) localStorage.setItem('bonji-default-store-id', event.data.storeId);
       if (event.data && event.data.type === 'bonji-open-camera') { cameraRequester = event.source; openParentCamera(); }
