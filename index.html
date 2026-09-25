@@ -33,6 +33,7 @@
     .loading-overlay { display: none; position: fixed; inset: 0; z-index: 10000; background: rgba(20, 30, 45, .58); align-items: center; justify-content: center; color: #fff; font-size: 20px; font-weight: 800; }
     .loading-overlay.show { display: flex; }
     .site-footer { margin: 18px 0 4px; text-align: center; color: #8a98a8; font-size: 11px; }
+    .app-open > .shell > header, .app-open .embedded-head, .app-open > .site-footer { display: none; }
     .master-chooser { display: none; margin-top: 14px; }
     .master-chooser.show { display: block; }
     .master-chooser-card { max-width: 760px; margin: 0 auto; padding: 22px; border: 1px solid #cbdced; border-radius: 18px; background: #fff; }
@@ -79,7 +80,7 @@
   <div id="loadingOverlay" class="loading-overlay" role="status" aria-live="polite">読み込み中…</div>
   <footer class="site-footer">© 2026 凡事徹底アプリ</footer>
   <script>
-    const appUrl = 'https://script.google.com/macros/s/AKfycbwdYLd3bRJRn5x32hodi88QmWmuK9JIrw3c09aS_2Hd_PCBNNkVjMo5Lm9Xcn5TFU8/exec?v=97';
+    const appUrl = 'https://script.google.com/macros/s/AKfycbwdYLd3bRJRn5x32hodi88QmWmuK9JIrw3c09aS_2Hd_PCBNNkVjMo5Lm9Xcn5TFU8/exec?v=98';
     const app = document.getElementById('embeddedApp');
     const frame = document.getElementById('appFrame');
     const title = document.getElementById('embeddedTitle');
@@ -91,7 +92,7 @@
       if (pendingView === 'monthlyPortal') { document.getElementById('monthlyChooser').classList.add('show'); document.querySelector('main.card').style.display = 'none'; document.getElementById('monthlyChooser').scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
       document.querySelector('main.card').style.display = 'none';
       title.textContent = pendingView === 'master' ? '店舗マスタ登録' : pendingView === 'temperatureMaster' ? '温度チェックマスタ' : pendingView === 'record' ? '清掃を実施' : pendingView === 'report' ? '清掃実施確認表' : pendingView === 'temperatureReport' ? '温度チェック実施確認表' : '温度チェック';
-      app.classList.add('show');
+      app.classList.add('show'); document.body.classList.add('app-open');
       app.classList.toggle('full-height-mode', pendingView === 'record' || pendingView === 'storeChecks');
       app.classList.toggle('report-mode', pendingView === 'report' || pendingView === 'temperatureReport');
       loadingOverlay.classList.add('show');
@@ -112,7 +113,7 @@
       document.getElementById('masterChooser').classList.remove('show');
       pendingView = view;
       title.textContent = view === 'temperatureMaster' ? '冷凍冷蔵庫マスタ' : '店舗マスタ';
-      app.classList.add('show');
+      app.classList.add('show'); document.body.classList.add('app-open');
       loadingOverlay.classList.add('show');
       app.scrollIntoView({ behavior: 'smooth', block: 'start' });
       frame.src = appUrl + '&embedded=1&master=1' + (view === 'temperatureMaster' ? '&temperatureMaster=1' : '');
@@ -122,14 +123,14 @@
       document.getElementById('monthlyChooser').classList.remove('show');
       pendingView = view;
       title.textContent = view === 'temperatureReport' ? '温度チェック確認表' : '清掃実施確認表';
-      app.classList.add('show');
+      app.classList.add('show'); document.body.classList.add('app-open');
       app.classList.toggle('report-mode', true);
       loadingOverlay.classList.add('show');
       app.scrollIntoView({ behavior: 'smooth', block: 'start' });
       frame.src = appUrlForView(view);
       window.setTimeout(() => loadingOverlay.classList.remove('show'), 30000);
     }
-    document.getElementById('closeApp').addEventListener('click', () => { pendingView = 'home'; loadingOverlay.classList.remove('show'); app.classList.remove('show'); frame.removeAttribute('src'); document.querySelector('main.card').style.display = ''; window.scrollTo({ top: 0, behavior: 'smooth' }); });
+    document.getElementById('closeApp').addEventListener('click', () => { pendingView = 'home'; loadingOverlay.classList.remove('show'); app.classList.remove('show'); document.body.classList.remove('app-open'); frame.removeAttribute('src'); document.querySelector('main.card').style.display = ''; window.scrollTo({ top: 0, behavior: 'smooth' }); });
     function appUrlForView(view) {
       const defaultStore = localStorage.getItem('bonji-default-store-id');
       return appUrl + '&embedded=1&view=' + encodeURIComponent(view) + (defaultStore ? '&defaultStore=' + encodeURIComponent(defaultStore) : '');
@@ -159,7 +160,7 @@
     window.addEventListener('message', event => {
       const target = event.source === frame.contentWindow ? frame : null;
       if (target && event.data && event.data.type === 'bonji-frame-height') setEmbeddedFrameHeight(target, event.data.height);
-      if (event.source === frame.contentWindow && event.data && event.data.type === 'bonji-home') { pendingView = 'home'; loadingOverlay.classList.remove('show'); app.classList.remove('show'); frame.removeAttribute('src'); document.querySelector('main.card').style.display = ''; window.scrollTo({ top: 0, behavior: 'smooth' }); }
+      if (event.source === frame.contentWindow && event.data && event.data.type === 'bonji-home') { pendingView = 'home'; loadingOverlay.classList.remove('show'); app.classList.remove('show'); document.body.classList.remove('app-open'); frame.removeAttribute('src'); document.querySelector('main.card').style.display = ''; window.scrollTo({ top: 0, behavior: 'smooth' }); }
       if (event.source === frame.contentWindow && event.data && event.data.type === 'bonji-data-ready') loadingOverlay.classList.remove('show');
       if (event.data && event.data.type === 'bonji-default-store' && event.data.storeId) localStorage.setItem('bonji-default-store-id', event.data.storeId);
       if (event.data && event.data.type === 'bonji-open-camera') { cameraRequester = event.source; openParentCamera(); }
