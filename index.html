@@ -83,7 +83,7 @@
   </div>
   <div id="loadingOverlay" class="loading-overlay" role="status" aria-live="polite">読み込み中…</div>
   <script>
-    const appUrl = 'https://script.google.com/macros/s/AKfycbwdYLd3bRJRn5x32hodi88QmWmuK9JIrw3c09aS_2Hd_PCBNNkVjMo5Lm9Xcn5TFU8/exec?v=108';
+    const appUrl = 'https://script.google.com/macros/s/AKfycbwdYLd3bRJRn5x32hodi88QmWmuK9JIrw3c09aS_2Hd_PCBNNkVjMo5Lm9Xcn5TFU8/exec?v=109';
     const app = document.getElementById('embeddedApp');
     const frame = document.getElementById('appFrame');
     const title = document.getElementById('embeddedTitle');
@@ -110,7 +110,21 @@
       frame.contentWindow.postMessage({ type: 'bonji-show-view', view: targetView }, '*');
       window.setTimeout(() => frame.contentWindow.postMessage({ type: 'bonji-show-view', view: targetView }, '*'), 2500);
     });
-    function showHome() { pendingView = 'home'; loadingOverlay.classList.remove('show'); document.getElementById('masterChooser').classList.remove('show'); document.getElementById('monthlyChooser').classList.remove('show'); app.classList.remove('show'); document.body.classList.remove('app-open'); frame.removeAttribute('src'); frame.style.height = ''; document.querySelector('main.card').style.display = ''; document.documentElement.scrollTop = 0; document.body.scrollTop = 0; window.scrollTo(0, 0); }
+    function showHome() {
+      pendingView = 'home';
+      loadingOverlay.classList.remove('show');
+      document.getElementById('masterChooser').classList.remove('show');
+      document.getElementById('monthlyChooser').classList.remove('show');
+      app.classList.remove('show', 'full-height-mode', 'report-mode');
+      document.body.classList.remove('app-open');
+      title.textContent = 'アプリ';
+      frame.removeAttribute('src');
+      frame.style.height = '';
+      document.querySelector('main.card').style.display = '';
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+      window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    }
     function closeMasterChooser() { showHome(); }
     function closeMonthlyChooser() { showHome(); }
     function openMasterView(view) {
@@ -164,7 +178,7 @@
     window.addEventListener('message', event => {
       const target = event.source === frame.contentWindow ? frame : null;
       if (target && event.data && event.data.type === 'bonji-frame-height') setEmbeddedFrameHeight(target, event.data.height);
-      if (event.source === frame.contentWindow && event.data && event.data.type === 'bonji-home') showHome();
+      if (event.data && event.data.type === 'bonji-home' && (event.source === frame.contentWindow || event.origin === 'https://script.google.com')) showHome();
       if (event.source === frame.contentWindow && event.data && event.data.type === 'bonji-data-ready') loadingOverlay.classList.remove('show');
       if (event.data && event.data.type === 'bonji-default-store' && event.data.storeId) localStorage.setItem('bonji-default-store-id', event.data.storeId);
       if (event.data && event.data.type === 'bonji-open-camera') { cameraRequester = event.source; openParentCamera(); }
