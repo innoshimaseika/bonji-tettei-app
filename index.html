@@ -178,7 +178,7 @@
     window.addEventListener('message', event => {
       const target = event.source === frame.contentWindow ? frame : null;
       if (target && event.data && event.data.type === 'bonji-frame-height') setEmbeddedFrameHeight(target, event.data.height);
-      if (event.data && event.data.type === 'bonji-home' && (event.source === frame.contentWindow || event.origin === 'https://script.google.com')) showHome();
+      if (event.data && event.data.type === 'bonji-home') showHome();
       if (event.source === frame.contentWindow && event.data && event.data.type === 'bonji-data-ready') loadingOverlay.classList.remove('show');
       if (event.data && event.data.type === 'bonji-default-store' && event.data.storeId) localStorage.setItem('bonji-default-store-id', event.data.storeId);
       if (event.data && event.data.type === 'bonji-open-camera') { cameraRequester = event.source; openParentCamera(); }
