@@ -32,6 +32,15 @@
     .close { border: 0; background: #eaf2fb; color: #2866a5; border-radius: 999px; padding: 8px 12px; cursor: pointer; }
     .loading-overlay { display: none; position: fixed; inset: 0; z-index: 10000; background: rgba(20, 30, 45, .58); align-items: center; justify-content: center; color: #fff; font-size: 20px; font-weight: 800; }
     .loading-overlay.show { display: flex; }
+    .master-chooser { display: none; margin-top: 14px; }
+    .master-chooser.show { display: block; }
+    .master-chooser-card { max-width: 760px; margin: 0 auto; padding: 22px; border: 1px solid #cbdced; border-radius: 18px; background: #fff; }
+    .master-chooser-card h2 { margin: 0 0 14px; color: #123a72; font-size: 22px; }
+    .master-choice { width: 100%; margin-top: 9px; padding: 13px 16px; border: 1px solid #cbdced; border-radius: 10px; background: #fff; color: #123a72; text-align: left; font: inherit; font-weight: 700; cursor: pointer; }
+    .master-choice:hover { background: #eff7ff; }
+    .master-choice-fold { margin-top: 9px; border: 1px solid #cbdced; border-radius: 10px; background: #fff; color: #123a72; }
+    .master-choice-fold summary { padding: 13px 16px; cursor: pointer; font-weight: 700; }
+    .master-choice-fold .master-choice { width: calc(100% - 20px); margin: 0 10px 10px; padding: 9px 12px; }
     iframe { display: block; width: 100%; height: calc(100vh - 90px); min-height: 520px; border: 0; border-radius: 0; background: transparent; }
     .master-quick { margin: -6px 0 18px; } .master-quick summary { display: inline-block; cursor: pointer; color: #47627d; font-size: 13px; font-weight: 700; padding: 3px 6px; } .master-quick iframe { height: 180px; min-height: 180px; border: 0; border-radius: 0; margin-top: 5px; }
     @media (max-width: 640px) { .shell { padding: 12px; } .brand { font-size: 19px; } h1 { font-size: 32px; } .nav-card { grid-template-columns: 58px 1fr; min-height: 112px; padding: 16px 18px; border-radius: 18px; } .nav-card .icon { font-size: 31px; } .nav-card h2 { font-size: 22px; } .nav-card p { font-size: 14px; } iframe { height: calc(100dvh - 90px); min-height: 520px; } .master-quick iframe { height: 180px; min-height: 180px; } }
@@ -42,14 +51,21 @@
     <header><div class="brand">凡事徹底アプリ</div></header>
     <main class="card">
       <div class="home-grid">
-        <button class="nav-card" type="button" data-view="master"><div class="icon">🏪</div><h2>店舗マスタ登録</h2><p>店舗の登録・編集・削除を行います。</p></button>
-        <button class="nav-card" type="button" data-view="temperatureMaster"><div class="icon">🌡️</div><h2>温度チェックマスタ</h2><p>冷凍冷蔵庫の場所と設定温度を登録・編集します。</p></button>
         <button class="nav-card" type="button" data-view="record"><div class="icon">🧹</div><h2>清掃を実施</h2><p>店舗と場所を選び、写真と担当者名を登録します。</p></button>
         <button class="nav-card" type="button" data-view="report"><div class="icon">📋</div><h2>清掃実施確認表</h2><p>月別・店舗別に、実施担当者の記録を確認します。</p></button>
         <button class="nav-card" type="button" data-view="storeChecks"><div class="icon">🌡️</div><h2>温度チェック</h2><p>冷蔵庫・冷凍庫の温度を入力し、入力時刻を自動記録します。</p></button>
         <button class="nav-card" type="button" data-view="temperatureReport"><div class="icon">📊</div><h2>温度チェック実施確認表</h2><p>店舗ごとの月間チェック状況を確認します。</p></button>
+        <button class="nav-card" type="button" data-view="masterPortal"><div class="icon">⚙️</div><h2>マスタ登録</h2><p>店舗マスタと冷凍冷蔵庫マスタを管理します。</p></button>
       </div>
     </main>
+    <section id="masterChooser" class="master-chooser" aria-live="polite">
+      <div class="master-chooser-card">
+        <h2>登録するマスタを選択</h2>
+        <details class="master-choice-fold"><summary>店舗マスタ</summary><button class="master-choice" type="button" onclick="openMasterView('master')">店舗マスタを開く</button></details>
+        <details class="master-choice-fold"><summary>冷凍冷蔵庫マスタ</summary><button class="master-choice" type="button" onclick="openMasterView('temperatureMaster')">冷凍冷蔵庫マスタを開く</button></details>
+        <button class="close" type="button" style="margin-top:12px" onclick="closeMasterChooser()">戻る</button>
+      </div>
+    </section>
     <section id="embeddedApp" class="embedded-app" aria-live="polite">
       <div class="embedded-head"><h2 id="embeddedTitle">アプリ</h2><button id="closeApp" class="close" type="button">閉じる</button></div>
       <iframe id="appFrame" title="凡事徹底アプリ" allow="camera"></iframe>
@@ -65,6 +81,7 @@
     let pendingView = 'home';
     document.querySelectorAll('[data-view]').forEach(button => button.addEventListener('click', () => {
       pendingView = button.dataset.view;
+      if (pendingView === 'masterPortal') { document.getElementById('masterChooser').classList.add('show'); document.querySelector('main.card').style.display = 'none'; document.getElementById('masterChooser').scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
       document.querySelector('main.card').style.display = 'none';
       title.textContent = pendingView === 'master' ? '店舗マスタ登録' : pendingView === 'temperatureMaster' ? '温度チェックマスタ' : pendingView === 'record' ? '清掃を実施' : pendingView === 'report' ? '清掃実施確認表' : pendingView === 'temperatureReport' ? '温度チェック実施確認表' : '温度チェック';
       app.classList.add('show');
@@ -82,6 +99,17 @@
       frame.contentWindow.postMessage({ type: 'bonji-show-view', view: targetView }, '*');
       window.setTimeout(() => frame.contentWindow.postMessage({ type: 'bonji-show-view', view: targetView }, '*'), 2500);
     });
+    function closeMasterChooser() { document.getElementById('masterChooser').classList.remove('show'); document.querySelector('main.card').style.display = ''; window.scrollTo({ top: 0, behavior: 'smooth' }); }
+    function openMasterView(view) {
+      document.getElementById('masterChooser').classList.remove('show');
+      pendingView = view;
+      title.textContent = view === 'temperatureMaster' ? '冷凍冷蔵庫マスタ' : '店舗マスタ';
+      app.classList.add('show');
+      loadingOverlay.classList.add('show');
+      app.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      frame.src = appUrl + '&embedded=1&master=1' + (view === 'temperatureMaster' ? '&temperatureMaster=1' : '');
+      window.setTimeout(() => loadingOverlay.classList.remove('show'), 30000);
+    }
     document.getElementById('closeApp').addEventListener('click', () => { pendingView = 'home'; loadingOverlay.classList.remove('show'); app.classList.remove('show'); frame.removeAttribute('src'); document.querySelector('main.card').style.display = ''; window.scrollTo({ top: 0, behavior: 'smooth' }); });
     function appUrlForView(view) {
       const defaultStore = localStorage.getItem('bonji-default-store-id');
