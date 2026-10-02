@@ -28,8 +28,8 @@
     .embedded-app { display: none; margin-top: 0; }
     .embedded-app.show { display: block; }
     .scroll-cue { display: none; opacity: 1; transition: opacity .2s ease; }
-    .embedded-app.record-mode .scroll-cue { display: flex; position: fixed; left: 50%; bottom: 14px; z-index: 20; transform: translateX(-50%); align-items: center; gap: 6px; padding: 7px 13px; border: 1px solid #b9d5ee; border-radius: 999px; background: rgba(255,255,255,.94); color: #2866a5; box-shadow: 0 4px 12px rgba(28,77,125,.16); font-size: 13px; font-weight: 700; pointer-events: none; animation: scroll-cue-bounce 1.4s ease-in-out infinite; }
-    .embedded-app.record-mode .scroll-cue.is-hidden { opacity: 0; }
+    .embedded-app #appFrame[src*="view=record"] + .scroll-cue { display: flex; position: fixed; left: 50%; bottom: 14px; z-index: 20; transform: translateX(-50%); align-items: center; gap: 6px; padding: 7px 13px; border: 1px solid #b9d5ee; border-radius: 999px; background: rgba(255,255,255,.94); color: #2866a5; box-shadow: 0 4px 12px rgba(28,77,125,.16); font-size: 13px; font-weight: 700; pointer-events: none; animation: scroll-cue-bounce 1.4s ease-in-out infinite; }
+    .embedded-app #appFrame[src*="view=record"] + .scroll-cue.is-hidden { opacity: 0; }
     @keyframes scroll-cue-bounce { 0%,100% { transform: translate(-50%,0); } 50% { transform: translate(-50%,4px); } }
     .embedded-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
     .embedded-head h2 { margin: 0; font-size: 20px; color: #123a72; }
