@@ -184,7 +184,7 @@
     window.addEventListener('message', event => {
       const target = event.source === frame.contentWindow ? frame : null;
       if (target && event.data && event.data.type === 'bonji-frame-height') setEmbeddedFrameHeight(target, event.data.height);
-      if (target && event.data && event.data.type === 'bonji-scroll-state') { const cue = document.querySelector('.scroll-cue'); if (cue) cue.classList.toggle('is-hidden', !!event.data.atBottom); }
+      if (target && event.data && event.data.type === 'bonji-scroll-state') { if (event.data.atBottom) { const cue = document.querySelector('.scroll-cue'); if (cue) cue.classList.add('is-hidden'); } else updateScrollCue(); }
       if (event.data && event.data.type === 'bonji-home') showHome();
       if (event.source === frame.contentWindow && event.data && event.data.type === 'bonji-data-ready') loadingOverlay.classList.remove('show');
       if (event.data && event.data.type === 'bonji-default-store' && event.data.storeId) localStorage.setItem('bonji-default-store-id', event.data.storeId);
@@ -193,9 +193,12 @@
       if (event.data && event.data.type === 'bonji-request-photographer') showPhotographerDialog({ data:event.data.data, takenAt:event.data.takenAt, requester:event.source });
     });
     window.addEventListener('resize', () => { if (frame.contentWindow) frame.contentWindow.postMessage({ type: 'bonji-frame-height-request' }, '*'); });
-    function updateScrollCue() { const cue = document.querySelector('.scroll-cue'); if (!cue) return; const root = document.documentElement; const top = window.scrollY || root.scrollTop || document.body.scrollTop; const atBottom = top + window.innerHeight >= Math.max(root.scrollHeight, document.body.scrollHeight) - 8; cue.classList.toggle('is-hidden', atBottom); }
-    window.addEventListener('scroll', updateScrollCue, { passive: true });
+    function updateScrollCue() { const cue = document.querySelector('.scroll-cue'); if (!cue) return; const root = document.scrollingElement || document.documentElement; const viewportHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight; const top = window.scrollY || root.scrollTop || document.body.scrollTop; const pageBottom = top + viewportHeight >= Math.max(root.scrollHeight, document.body.scrollHeight) - 8; const frameBottom = frame.getBoundingClientRect().bottom <= viewportHeight + 8; cue.classList.toggle('is-hidden', pageBottom || frameBottom); }
+    window.addEventListener('scroll', updateScrollCue, { passive: true, capture: true });
+    document.addEventListener('scroll', updateScrollCue, { passive: true, capture: true });
     window.addEventListener('resize', updateScrollCue);
+    if (window.visualViewport) window.visualViewport.addEventListener('resize', updateScrollCue);
+    frame.addEventListener('load', updateScrollCue);
     window.setTimeout(updateScrollCue, 300);
   </script>
 </body>
