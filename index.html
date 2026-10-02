@@ -193,6 +193,10 @@
       if (event.data && event.data.type === 'bonji-request-photographer') showPhotographerDialog({ data:event.data.data, takenAt:event.data.takenAt, requester:event.source });
     });
     window.addEventListener('resize', () => { if (frame.contentWindow) frame.contentWindow.postMessage({ type: 'bonji-frame-height-request' }, '*'); });
+    function updateScrollCue() { const cue = document.querySelector('.scroll-cue'); if (!cue) return; const root = document.documentElement; const top = window.scrollY || root.scrollTop || document.body.scrollTop; const atBottom = top + window.innerHeight >= Math.max(root.scrollHeight, document.body.scrollHeight) - 8; cue.classList.toggle('is-hidden', atBottom); }
+    window.addEventListener('scroll', updateScrollCue, { passive: true });
+    window.addEventListener('resize', updateScrollCue);
+    window.setTimeout(updateScrollCue, 300);
   </script>
 </body>
 </html>
