@@ -193,7 +193,7 @@
       if (event.data && event.data.type === 'bonji-request-photographer') showPhotographerDialog({ data:event.data.data, takenAt:event.data.takenAt, requester:event.source });
     });
     window.addEventListener('resize', () => { if (frame.contentWindow) frame.contentWindow.postMessage({ type: 'bonji-frame-height-request' }, '*'); });
-    function updateScrollCue() { const cue = document.querySelector('.scroll-cue'); if (!cue) return; const root = document.scrollingElement || document.documentElement; const viewportHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight; const top = window.scrollY || root.scrollTop || document.body.scrollTop; const pageBottom = top + viewportHeight >= Math.max(root.scrollHeight, document.body.scrollHeight) - 8; const frameBottom = frame.getBoundingClientRect().bottom <= viewportHeight + 8; cue.classList.toggle('is-hidden', pageBottom || frameBottom); }
+    function updateScrollCue() { const cue = document.querySelector('.scroll-cue'); if (!cue) return; const root = document.scrollingElement || document.documentElement; const viewportHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight; const top = window.scrollY || root.scrollTop || document.body.scrollTop; const pageBottom = top > 8 && top + viewportHeight >= Math.max(root.scrollHeight, document.body.scrollHeight) - 8; cue.classList.toggle('is-hidden', pageBottom); }
     window.addEventListener('scroll', updateScrollCue, { passive: true, capture: true });
     document.addEventListener('scroll', updateScrollCue, { passive: true, capture: true });
     window.addEventListener('resize', updateScrollCue);
