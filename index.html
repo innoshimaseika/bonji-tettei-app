@@ -83,7 +83,6 @@
     <section id="embeddedApp" class="embedded-app" aria-live="polite">
       <div class="embedded-head"><h2 id="embeddedTitle">アプリ</h2><button id="closeApp" class="close" type="button">閉じる</button></div>
       <iframe id="appFrame" title="凡事徹底アプリ" allow="camera"></iframe>
-      <div id="scrollCueSentinel" aria-hidden="true" style="height:1px"></div>
       <div class="scroll-cue" aria-hidden="true">↓ 清掃場所は下に続きます</div>
     </section>
   </div>
@@ -182,10 +181,11 @@
     function showParentPhoto(data) { closeParentDialog(); parentDialog = document.createElement('div'); parentDialog.style.cssText = 'position:fixed;inset:0;z-index:10001;background:rgba(0,0,0,.82);display:flex;align-items:flex-start;justify-content:center;padding:16px;overflow:auto'; parentDialog.innerHTML = '<div style="width:min(100%,720px);background:#fff;border-radius:14px;padding:12px;text-align:center"><img src="'+data.src+'" style="display:block;margin:auto;max-width:100%;max-height:70vh;object-fit:contain;border-radius:8px"><div style="font-size:12px;color:#63758a;margin-top:8px">担当者：'+data.person+'　撮影時刻：'+data.time+'</div><button type="button" style="margin-top:10px;border:0;border-radius:8px;background:#1769aa;color:#fff;padding:9px 22px;font-weight:700">閉じる</button></div>'; parentDialog.querySelector('button').onclick = closeParentDialog; parentDialog.onclick = e => { if (e.target === parentDialog) closeParentDialog(); }; document.body.appendChild(parentDialog); }
     let photographerRequester = null;
     function showPhotographerDialog(data) { closeParentDialog(); photographerRequester = data.requester; parentDialog = document.createElement('div'); parentDialog.style.cssText = 'position:fixed;inset:0;z-index:10001;background:rgba(0,0,0,.65);display:flex;align-items:flex-start;justify-content:center;padding:18px'; parentDialog.innerHTML = '<div style="width:min(100%,420px);background:#fff;border-radius:14px;padding:18px"><strong style="display:block;color:#172033;font-size:17px;margin-bottom:10px">撮影者の名前を入力してください。</strong><input id="parentPhotographer" type="text" maxlength="80" autocomplete="name" style="width:100%;box-sizing:border-box;border:1px solid #cbd8e6;border-radius:8px;padding:11px;font:inherit"><div id="parentPhotographerError" style="color:#a52d2d;font-size:12px;min-height:18px;margin-top:6px"></div><button id="parentPhotographerOk" type="button" style="width:100%;border:0;border-radius:8px;background:#1769aa;color:#fff;padding:11px;font-weight:800">登録する</button></div>'; document.body.appendChild(parentDialog); const input = parentDialog.querySelector('#parentPhotographer'); input.focus(); parentDialog.querySelector('#parentPhotographerOk').onclick = () => { const name = input.value.trim(); if (!name) { parentDialog.querySelector('#parentPhotographerError').textContent = '撮影者の名前を入力してください。'; return; } photographerRequester.postMessage({ type:'bonji-photographer-result', data:data.data, name }, '*'); closeParentDialog(); }; input.addEventListener('keydown', e => { if (e.key === 'Enter') parentDialog.querySelector('#parentPhotographerOk').click(); }); }
-    function setEmbeddedFrameHeight(target, value) { const content = Number(value) || 0; const minimum = target === frame ? Math.max(520, window.innerHeight - 90) : 180; target.style.height = Math.max(minimum, Math.ceil(content)) + 'px'; window.setTimeout(updateScrollCue, 0); }
+    function setEmbeddedFrameHeight(target, value) { if (target === frame && app.classList.contains('record-mode') && window.matchMedia('(max-width: 640px)').matches) { target.style.height = '100dvh'; return; } const content = Number(value) || 0; const minimum = target === frame ? Math.max(520, window.innerHeight - 90) : 180; target.style.height = Math.max(minimum, Math.ceil(content)) + 'px'; window.setTimeout(updateScrollCue, 0); }
     window.addEventListener('message', event => {
       const target = event.source === frame.contentWindow ? frame : null;
       if (target && event.data && event.data.type === 'bonji-frame-height') setEmbeddedFrameHeight(target, event.data.height);
+      if (target && event.data && event.data.type === 'bonji-scroll-state') { const cue = document.querySelector('.scroll-cue'); if (cue) cue.classList.toggle('is-hidden', !!event.data.atBottom); }
       if (event.data && event.data.type === 'bonji-home') showHome();
       if (event.source === frame.contentWindow && event.data && event.data.type === 'bonji-data-ready') loadingOverlay.classList.remove('show');
       if (event.data && event.data.type === 'bonji-default-store' && event.data.storeId) localStorage.setItem('bonji-default-store-id', event.data.storeId);
@@ -201,8 +201,6 @@
     if (window.visualViewport) window.visualViewport.addEventListener('resize', updateScrollCue);
     frame.addEventListener('load', updateScrollCue);
     window.setTimeout(updateScrollCue, 300);
-    const scrollCueSentinel = document.getElementById('scrollCueSentinel');
-    if ('IntersectionObserver' in window && scrollCueSentinel) new IntersectionObserver(entries => { const cue = document.querySelector('.scroll-cue'); if (!cue) return; const isRecord = (frame.getAttribute('src') || '').includes('view=record'); cue.classList.toggle('is-hidden', isRecord && entries.some(entry => entry.isIntersecting)); }, { threshold: 0.01 }).observe(scrollCueSentinel);
   </script>
 </body>
 </html>
